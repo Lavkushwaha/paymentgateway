@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Header -->
+
+    <include
+        android:id="@+id/application_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        layout="@layout/paynimo_application_header" />
+
+    <!-- Header ends -->
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/upiList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/application_header"/>
+
+    <com.paynimo.android.payment.CustomButton
+        android:id="@+id/paynimo_btn_pay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"
+        android:text="@string/paynimo_netbanking_btn_pay_label" />
+
+</RelativeLayout>
