@@ -29,8 +29,9 @@ import java.util.Date;
 public class MainActivity extends FlutterActivity {
     private static final String CHANNEL = "samples.flutter.dev/payment";
     public static final int REQUEST_CODE_PAYTM = 0x00;
+//    const String TAG ="LAV";
 
-    private static final String TAG = "CheckoutActivity";
+    private static final String TAG = "LAV";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +42,7 @@ public class MainActivity extends FlutterActivity {
 //            @Override
 //            public void onClick(View v) {
 //                startPay();
+////            doPayment();
 //            }
 //        });
     }
@@ -49,12 +51,16 @@ public class MainActivity extends FlutterActivity {
     @Override
     public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
         super.configureFlutterEngine(flutterEngine);
+
         new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), CHANNEL)
                 .setMethodCallHandler(
+
                         (call, result) -> {
-                            Log.d("TAGPay", call.method);
+                            Log.d(TAG, "Reached here");
                             if (call.method.equals("doPayment")) {
-                                int paymentResult =  doPayment();
+//                                int paymentResult =
+//                                        doPayment();
+                                startPay();
 //                                if (paymentResult != -1) {
 //                                    result.success(paymentResult);
 //                                } else {
@@ -63,11 +69,86 @@ public class MainActivity extends FlutterActivity {
                             } else {
                                 result.notImplemented();
                             }
+
+
+                            // Note: this method is invoked on the main thread.
+                            // TODO
                         }
                 );
+
+
+//        new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), CHANNEL)
+//                .setMethodCallHandler(
+//                        (call, result) -> {
+//                            Log.d("TAGPay", call.method);
+//                            if (call.method.equals("doPayment")) {
+////                                int paymentResult =
+////                                        doPayment();
+//                                startPay();
+////                                if (paymentResult != -1) {
+////                                    result.success(paymentResult);
+////                                } else {
+////                                    result.error("UNAVAILABLE", "Unable To Payment", null);
+////                                }
+//                            } else {
+//                                result.notImplemented();
+//                            }
+//                        }
+//                );
     }
 
-    private int doPayment() {
+    private void startPay() {
+        Log.d(TAG, "Reached inside startpay");
+
+
+
+        Checkout checkout = new Checkout();
+        checkout.setMerchantIdentifier("T515688");
+        checkout.setTransactionIdentifier(String.valueOf(new Date().getTime()));
+        checkout.setTransactionReference("ORD0001");
+        checkout.setTransactionType(PaymentActivity.TRANSACTION_TYPE_SALE);
+        checkout.setTransactionSubType(PaymentActivity.TRANSACTION_SUBTYPE_DEBIT);
+        checkout.setTransactionCurrency("INR");
+        checkout.setTransactionAmount("50");
+        checkout.setTransactionDateTime("03-04-2020");
+        checkout.setConsumerIdentifier("10086");
+        checkout.setConsumerEmailID("rohitbhard@gmail.com");
+        checkout.setConsumerMobileNumber("8826120009");
+        checkout.setConsumerAccountNo("");
+        checkout.addCartItem("FIRST", "1", "0.0", "0.0", "", "", "", "");
+        checkout.setPaymentInstructionAction("Y");
+        checkout.setPaymentInstructionStartDateTime("05-02-2021");
+        checkout.setPaymentInstructionEndDateTime("25-02-2050");
+        checkout.setPaymentInstructionLimit("100");
+        checkout.setPaymentInstructionFrequency("ADHO");
+        checkout.setPaymentInstructionType("F");
+
+        checkout.setConsumerAccountHolderName("ROHIT BHARDWAJ");
+        checkout.setConsumerAccountType("Saving");
+        checkout.setConsumerAccountNo("031401543318");
+        checkout.setConsumerPan("AMDPB1252C"); //Consumer PAN
+        checkout.setConsumerPhoneNumber("8826120009"); //Consumer Phone Number
+
+        Intent authIntent = PaymentModesActivity.Factory.getAuthorizationIntent(getApplicationContext(), true);
+        // Checkout Object
+        Log.d(TAG, checkout.getMerchantRequestPayload().toString());
+        Log.d(TAG, "next is auth intent");
+
+        authIntent.putExtra(Constant.ARGUMENT_DATA_CHECKOUT, checkout);
+        // Public Key
+        authIntent.putExtra(PaymentActivity.EXTRA_PUBLIC_KEY, "1234-6666-6789-56");
+        // Requested Payment Mode
+        authIntent.putExtra(PaymentActivity.EXTRA_REQUESTED_PAYMENT_MODE,
+                PaymentActivity.PAYMENT_METHOD_NETBANKING);
+
+        PaymentModesActivity.Settings settings = new PaymentModesActivity.Settings();
+        authIntent.putExtra(Constant.ARGUMENT_DATA_SETTING, settings);
+
+        startActivityForResult(authIntent, PaymentActivity.REQUEST_CODE);
+
+    }
+
+    private void doPayment() {
         Log.d("TAG", "I am Here Android");
         int paymentResult = -1;
         try {
@@ -116,12 +197,14 @@ public class MainActivity extends FlutterActivity {
         } catch (Exception e) {
             Log.d("TAG", e.getMessage());
         }
-        return paymentResult;
+//        return paymentResult;
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "reched on activity result");
+
 
         // Check which request we're responding to
         if (requestCode == PaymentActivity.REQUEST_CODE) {
