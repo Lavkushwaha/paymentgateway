@@ -37,7 +37,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   static const platform = const MethodChannel('samples.flutter.dev/payment');
 
   @override
@@ -63,7 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void _payRsOne() async{
+  void _payRsOne() async {
     PaymentData payment = new PaymentData(
         userId: 1,
         userEmail: 'bhorodiya.kunal@gmail.com',
@@ -72,15 +71,16 @@ class _MyHomePageState extends State<MyHomePage> {
         transactionAmount: '1',
         transactionDatetime: '18-05-2020',
         transactionCurrency: "INR",
-        transactionIdentifier: 'TXN4535345' + Random().nextInt(15).toString() + "" + Random().nextInt(15).toString());
+        transactionIdentifier: 'TXN4535345' +
+            Random().nextInt(15).toString() +
+            "" +
+            Random().nextInt(15).toString());
 
     try {
       var result = await platform.invokeMethod('doPayment', payment.toJson());
-      print("result  ${result}");
+      print("result  $result");
     } on PlatformException catch (e) {
       print("Failed to get data: '${e.message}'.");
     }
-
   }
-
 }

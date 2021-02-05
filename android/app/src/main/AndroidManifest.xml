@@ -2,17 +2,37 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.paynimo.paymentgateway">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false"/>
+
+    <!-- permission for Internet -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.SMS_FINANCIAL_TRANSACTIONS"/>
 
     <application
         android:name="io.flutter.app.FlutterApplication"
         android:icon="@mipmap/ic_launcher"
-        android:label="paymentgateway">
-        <activity android:name=".MainActivity"
+        android:label="paymentgateway"
+
+        android:theme="@style/paynimoUXTheme"
+        >
+
+        <activity
+            android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
             android:launchMode="singleTop"
-            android:theme="@style/LaunchTheme"
+            android:supportsRtl="true"
+
+
+
+
+
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,11 +42,56 @@
         </activity>
 
         <activity
-android:name="com.paynimo.android.payment.PaymentModesActivity"            android:configChanges="keyboard|keyboardHidden|orientation|
+            android:name="com.paynimo.android.payment.PaymentModesActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+
+
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize">
+
+
+        </activity>
+        <activity
+            android:name="com.paynimo.android.payment.PaymentActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|
 screenSize"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize" >
+            android:windowSoftInputMode="adjustResize">
+
         </activity>
+        <activity
+            android:name="com.paynimo.android.payment.WebViewActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|
+screenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden">
+
+        </activity>
+        <activity
+            android:name="com.paynimo.android.payment.UPIActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|
+screenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden">
+
+        </activity>
+
+
+        <activity
+            android:name="com.paynimo.android.payment.DigitalMandateActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|
+screenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden">
+
+        </activity>
+
+        <receiver android:name="com.paynimo.android.payment.network.NetworkStateReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+            </intent-filter>
+        </receiver>
         <!--
  Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java
